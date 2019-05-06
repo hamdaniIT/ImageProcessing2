@@ -14,7 +14,6 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 
-
 /**
  *
  * @author hd
@@ -63,6 +62,7 @@ public class Praktikum2_MengambilPixelXY extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         jLabel12 = new javax.swing.JLabel();
         jButton2 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -123,6 +123,13 @@ public class Praktikum2_MengambilPixelXY extends javax.swing.JFrame {
             }
         });
 
+        jButton3.setText("To binary");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -179,7 +186,9 @@ public class Praktikum2_MengambilPixelXY extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 556, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -190,7 +199,7 @@ public class Praktikum2_MengambilPixelXY extends javax.swing.JFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addGap(4, 4, 4)
@@ -229,10 +238,11 @@ public class Praktikum2_MengambilPixelXY extends javax.swing.JFrame {
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(jTextField7B, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jTextField7B1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(jButton1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jButton1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 411, Short.MAX_VALUE)
@@ -286,11 +296,64 @@ public class Praktikum2_MengambilPixelXY extends javax.swing.JFrame {
     }//GEN-LAST:event_jLabel12MouseClicked
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-       BufferedImage gambar_gray = gray(loadImage(path));
+        BufferedImage gambar_gray = gray(loadImage(path));
         ImageIcon ic = new ImageIcon(gambar_gray);
         jLabel12.setIcon(ic);
     }//GEN-LAST:event_jButton2ActionPerformed
-  
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        BufferedImage  gambarBinary= gray(loadImage(path));
+        gambarBinary = binary(gambarBinary);
+        ImageIcon ic = new ImageIcon(gambarBinary);
+        jLabel12.setIcon(ic);
+    }//GEN-LAST:event_jButton3ActionPerformed
+    //https://catatan-pemrograman.blogspot.com/2014/10/citra-biner-dengan-java.html
+    public BufferedImage gray(BufferedImage gambar_c) {
+        int w = gambar_c.getWidth();
+        int h = gambar_c.getHeight();
+
+        BufferedImage grayScale = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
+
+        for (int y = 0; y < gambar_c.getHeight(); y++) {
+            for (int x = 0; x < gambar_c.getWidth(); x++) {
+                Color c = new Color(gambar_c.getRGB(x, y));
+                int red = (int) c.getRed();
+                int green = (int) c.getGreen();
+                int blue = (int) c.getBlue();
+
+                int avg = (red + green + blue) / 3;
+                Color newColor = new Color(avg, avg, avg);
+
+                grayScale.setRGB(x, y, newColor.getRGB());
+            }
+        }
+        return grayScale;
+    }
+    public BufferedImage binary(BufferedImage gambar_c) {
+        int w = gambar_c.getWidth();
+        int h = gambar_c.getHeight();
+        int threshould=130;
+        BufferedImage binary = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
+
+        for (int y = 0; y < gambar_c.getHeight(); y++) {
+            for (int x = 0; x < gambar_c.getWidth(); x++) {
+                Color c = new Color(gambar_c.getRGB(x, y));
+                int col=(int)((c.getRed()+c.getGreen()+c.getBlue())/3);
+                int a;
+                if(col<threshould){
+                    a=0;
+                }else{
+                    a=255;
+                }
+              
+                Color newColor = new Color(a, a, a);
+
+                binary.setRGB(x, y, newColor.getRGB());
+            }
+        }
+        return binary;
+    }
+
     /**
      * @param args the command line arguments
      */
@@ -335,33 +398,13 @@ public class Praktikum2_MengambilPixelXY extends javax.swing.JFrame {
         }
         return bufImage;
     }
-    public BufferedImage gray(BufferedImage gambar_c) {
-        int w = gambar_c.getWidth();
-        int h = gambar_c.getHeight();
 
-        BufferedImage grayScale = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
-
-        for (int y = 0; y < gambar_c.getHeight(); y++)
-        {          
-            for (int x = 0; x < gambar_c.getWidth(); x++)
-            {
-                 Color c = new Color(gambar_c.getRGB(x, y));
-                 int red = (int) c.getRed();
-                 int green = (int) c.getGreen();
-                 int blue = (int) c.getBlue();
-               
-                 int avg = (red + green + blue) / 3;
-                Color newColor = new Color(avg,avg,avg);
-
-               grayScale.setRGB(x,y,newColor.getRGB());
-            }
-        }
-        return grayScale;
-    }
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel12;
